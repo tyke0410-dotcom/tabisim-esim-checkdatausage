@@ -1,1057 +1,632 @@
-<title>データ使用量ガイド</title>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>eSIM対応チェッカー | TabiSIM</title>
+<meta name="description" content="お使いのスマートフォンでTabiSIMのeSIMが使えるか、機種名を入力してすぐに確認できます。">
 <style>
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  img{max-width:100%;}
+  [hidden]{display:none!important;}
   :root{
-    --brand-brown:#2A2118;
-    --brand-gold:#C4A44A;
-
-    --brown-50:#f5f2ee;
-    --brown-100:#e9e2da;
-    --brown-200:#d6c9ba;
-    --brown-300:#b9a48d;
-    --brown-400:#93795e;
-    --brown-500:#6b5645;
-    --brown-600:#4d3c30;
-    --brown-700:#382c23;
-    --brown-800:#28201a;
-    --brown-900:#1c1712;
-
-    --gold-100:#efe1bd;
-    --gold-200:#e0c98c;
-    --gold-300:#d3b56a;
-    --gold-400:#c4a44a;
-    --gold-600:#96772f;
-    --gold-700:#725923;
-    --gradient-dawn: linear-gradient(160deg,#f7f2e9 0%,#efe1bd 55%,#d3b56a 100%);
-
-    --cream-0:#fbf9f5;
-    --cream-50:#f7f2e9;
-    --cream-100:#f1e9da;
-    --cream-200:#e6d9c2;
-
-    --success:#3f7a4e;
-    --success-bg:#e7f2e9;
-    --warning:#a6690f;
-    --warning-bg:#faf0dd;
-    --info:#3d6f96;
-    --info-bg:#e7f0f5;
-
-    --surface-page:var(--cream-0);
-    --surface-card:#ffffff;
-    --surface-sunken:var(--cream-50);
-    --surface-brand:var(--brand-brown);
-
-    --text-primary:var(--brown-900);
-    --text-secondary:var(--brown-500);
-    --text-tertiary:var(--brown-300);
-    --text-on-brand:var(--cream-0);
-
-    --border-subtle:var(--cream-200);
-    --border-default:var(--brown-200);
-    --border-accent:var(--brand-gold);
-
-    --radius-sm:6px;
-    --radius-md:10px;
-    --radius-card:14px;
-    --radius-pill:999px;
-
-    --shadow-sm:0 1px 2px rgba(42,33,24,.08);
-    --shadow-md:0 4px 12px rgba(42,33,24,.10),0 1px 3px rgba(42,33,24,.08);
-    --shadow-gold-glow:0 6px 20px rgba(196,164,74,.35);
-
-    --font-sans:'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', Arial, sans-serif;
-    --font-serif-accent:'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', Arial, sans-serif;
-
+    --cream-50:#FBF9F6;
+    --cream-100:#FFFFFF;
+    --gold-100:#F1E3BE;
+    --gold-500:#C4A44A;
+    --brown:#2A2118;
+    --brown-soft:#5A4F41;
+    --line:#EBE3D4;
+    --alert:#C0392B;
+    --alert-100:#F7E2DD;
+    --alert-line:#E8BCAF;
+    --ok-bg:var(--gold-100);
+    --ok-fg:var(--brown);
+    --ok-line:var(--gold-500);
+    --ng-bg:var(--alert-100);
+    --ng-fg:var(--alert);
+    --ng-line:var(--alert-line);
+    --unk-bg:#EFE7D2;
+    --unk-fg:#7A6A46;
+    --unk-line:#DECBA0;
     color-scheme: light;
   }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --cream-50:#1E1912;
+      --cream-100:#241E15;
+      --gold-100:#33291A;
+      --gold-500:#D4B563;
+      --brown:#F2E9D8;
+      --brown-soft:#C9BBA0;
+      --line:#3A3020;
+      --alert:#E0917C;
+      --alert-100:#2E1E19;
+      --alert-line:#432922;
+      --ok-bg:var(--gold-100);--ok-fg:var(--brown);--ok-line:var(--gold-500);
+      --ng-bg:var(--alert-100);--ng-fg:var(--alert);--ng-line:var(--alert-line);
+      --unk-bg:#2A2417;--unk-fg:#D8C48F;--unk-line:#3E3521;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --cream-50:#1E1912;
+    --cream-100:#241E15;
+    --gold-100:#33291A;
+    --gold-500:#D4B563;
+    --brown:#F2E9D8;
+    --brown-soft:#C9BBA0;
+    --line:#3A3020;
+    --alert:#E0917C;
+    --alert-100:#2E1E19;
+    --alert-line:#432922;
+    --ok-bg:var(--gold-100);--ok-fg:var(--brown);--ok-line:var(--gold-500);
+    --ng-bg:var(--alert-100);--ng-fg:var(--alert);--ng-line:var(--alert-line);
+    --unk-bg:#2A2417;--unk-fg:#D8C48F;--unk-line:#3E3521;
+    color-scheme: dark;
+  }
 
-  * { box-sizing: border-box; }
-
+  *{box-sizing:border-box;}
   body{
-    background: var(--surface-page);
-    color: var(--text-primary);
-    font-family: var(--font-sans);
-    font-size: 16px;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
+    margin:0;
+    background:var(--cream-50);
+    color:var(--brown);
+    font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic','Meiryo',Arial,sans-serif;
+    padding-inline:20px;
+    padding-block:0 40px;
   }
+  .wrap{max-width:640px;margin:0 auto;}
 
-  h1,h2,h3{ text-wrap: balance; margin: 0; }
-
-  a,button{ font: inherit; }
-  :focus-visible{ outline: 2px solid var(--brand-gold); outline-offset: 2px; }
-
-  .wrap{
-    max-width: 720px;
-    margin: 0 auto;
-    padding-inline: 20px;
-  }
-
-  /* ---------- Header ---------- */
   header.top{
-    background: transparent;
-    padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
-    padding-bottom: 12px;
-    position: relative;
+    position:sticky;
+    top:env(safe-area-inset-top,0px);
+    z-index:5;
+    display:flex;align-items:center;justify-content:space-between;
+    padding-block:16px;
+    background:var(--cream-50);
   }
-  .top-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap: 12px;
-  }
-  .logo{
-    display:flex; align-items:center; gap:8px;
-  }
-  .logo img{ height: 38px; width:auto; display:block; }
-  .logo-fallback{
-    font-family: var(--font-serif-accent);
-    font-size: 26px;
-    letter-spacing: .02em;
-    color: var(--text-primary);
-  }
-  .top-actions{ display:flex; align-items:center; gap:8px; position:relative; }
+  .brand{display:flex;align-items:center;}
+  .brand img{height:32px;width:auto;display:block;}
+  .brand svg{width:22px;height:22px;flex:none;}
+  .top-icons{display:flex;gap:10px;}
   .icon-btn{
-    width:36px; height:36px;
-    display:flex; align-items:center; justify-content:center;
-    border-radius:50%;
-    border:1px solid var(--border-default);
-    background: var(--surface-card);
-    color: var(--text-primary);
-    cursor:pointer;
+    width:38px;height:38px;border-radius:999px;border:1px solid var(--line);
+    background:transparent;display:flex;align-items:center;justify-content:center;
+    color:var(--brown);cursor:pointer;
   }
-  .icon-btn svg{ width:18px; height:18px; }
-  .icon-btn:hover{ border-color: var(--border-accent); }
-  .dropdown{
-    position:absolute; top:calc(100% + 8px); right:0;
-    background: var(--surface-card);
-    border:1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    min-width:160px;
-    padding:6px;
-    display:none;
-    z-index:30;
-  }
-  .dropdown.open{ display:block; }
-  .dropdown button, .dropdown a{
-    display:block;
-    width:100%;
-    text-align:left;
-    font-family: var(--font-sans);
-    font-size:13.5px;
-    padding:9px 10px;
-    border-radius: var(--radius-sm);
-    border:none;
-    background:none;
-    color: var(--text-secondary);
-    text-decoration:none;
-    cursor:pointer;
-  }
-  .dropdown button[aria-current="true"]{ color: var(--text-primary); font-weight:600; background: var(--surface-sunken); }
-  .dropdown button:hover, .dropdown a:hover{ background: var(--surface-sunken); }
+  .icon-btn:hover{background:var(--gold-100);}
+  .icon-btn:focus-visible{outline:2px solid var(--gold-500);outline-offset:2px;}
 
-  /* ---------- Hero ---------- */
-  .hero{ padding-block: 30px 20px; }
+  .hero{
+    border-radius:20px;
+    padding:40px 24px 44px;
+    text-align:center;
+    background:linear-gradient(180deg,var(--cream-100) 0%,var(--gold-100) 100%);
+    margin-bottom:20px;
+  }
   .hero h1{
-    font-family: var(--font-serif-accent);
-    font-size: 28px;
-    line-height: 1.35;
-    color: var(--text-primary);
+    font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic','Meiryo',Arial,sans-serif;
+    font-weight:700;
+    font-size:clamp(28px,7vw,38px);
+    letter-spacing:.04em;
+    margin:0 0 12px;
+    text-wrap:balance;
   }
   .hero p{
-    margin-top: 8px;
-    color: var(--text-secondary);
-    font-size: 15px;
-    max-width: 46ch;
+    margin:0;color:var(--brown-soft);font-size:15px;line-height:1.7;
+    max-width:38ch;margin-inline:auto;
   }
-
-  .quicknav{
-    display:flex; gap:8px; flex-wrap:wrap;
-    margin-top:18px;
-  }
-  .quicknav a{
-    display:inline-flex; align-items:center; gap:6px;
-    font-size: 13px; font-weight:500;
-    padding: 8px 14px;
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--border-default);
-    background: var(--surface-card);
-    color: var(--text-primary);
-    text-decoration:none;
-  }
-  .quicknav a svg{ width:15px; height:15px; color:var(--gold-700); }
-  .quicknav a:hover{ border-color: var(--border-accent); }
-
-  /* ---------- Section heading ---------- */
-  .section{ padding-block: 8px 32px; }
-  .section-head{
-    display:flex; align-items:center; gap:10px;
-    margin-bottom: 16px;
-  }
-  .section-head .num{
-    display:flex; align-items:center; justify-content:center;
-    width:26px; height:26px; border-radius:50%;
-    background: var(--brand-brown); color: var(--text-on-brand);
-    font-size:13px; font-weight:600; flex-shrink:0;
-  }
-  .section-head .num svg{ width:14px; height:14px; }
-  .section-head h2{
-    font-size: 18px; font-weight: 700; color: var(--text-primary);
-  }
-  /* ---------- Segmented tabs (OS switcher) ---------- */
-  .segmented{
-    display:flex;
-    border-bottom: 1px solid var(--border-subtle);
-    gap: 22px;
-  }
-  .segmented button{
-    display:flex; align-items:center; gap:6px;
-    font-family: var(--font-sans);
-    font-size: 15px; font-weight:500;
-    padding: 4px 2px 12px;
-    border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    background: transparent;
-    color: var(--text-tertiary);
-    cursor:pointer;
-  }
-  .segmented button svg{ width:16px; height:16px; flex-shrink:0; }
-  .segmented button[aria-selected="true"]{
-    color: var(--text-primary);
-    font-weight:700;
-    border-bottom-color: var(--text-primary);
-  }
-
-  .subtabs{
-    display:flex; gap:8px; margin: 16px 0 18px; flex-wrap:wrap;
-  }
-  .subtabs button{
-    font-family: var(--font-sans);
-    font-size: 13px; font-weight:500;
-    padding: 7px 14px;
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--border-default);
-    background: var(--surface-card);
-    color: var(--text-secondary);
-    cursor:pointer;
-  }
-  .subtabs button[aria-selected="true"]{
-    border-color: var(--brand-brown);
-    background: var(--brand-brown);
-    color: var(--text-on-brand);
-  }
-
-  .panel{ display:none; }
-  .panel.active{ display:block; }
-
-  /* ---------- Step head (badge + label above screenshot) ---------- */
-  .step-head{
-    display:flex; align-items:center; gap:10px;
-    margin-bottom:14px;
-  }
-  .step-badge{
-    flex-shrink:0;
-    width:26px; height:26px;
-    border-radius:50%;
-    background: var(--danger, #c0392b);
-    color:#fff;
-    display:flex; align-items:center; justify-content:center;
-    font-size:13px; font-weight:700;
-    font-variant-numeric: tabular-nums;
-  }
-  .step-label{ font-size:15px; font-weight:600; color:var(--text-primary); }
-
-  /* ---------- Screenshot walkthrough ---------- */
-  .shot-carousel{
-    display:flex; gap:14px;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-    padding: 2px 2px 8px;
-    margin: 0 -2px;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-    flex:1 1 auto;
-    min-width:0;
-    justify-content:center;
-  }
-  .shot-carousel::-webkit-scrollbar{ display:none; }
-  .shot-slide{
-    flex:0 0 100%;
-    max-width:280px;
-    scroll-snap-align:center;
-    display:flex; flex-direction:column;
-  }
-  .shot-frame{
-    border-radius:16px;
-    overflow:hidden;
-    border:1px solid var(--border-subtle);
-    box-shadow: var(--shadow-sm);
-    background: var(--surface-sunken);
-    max-width: 260px;
-    margin: 0 auto;
-  }
-  .shot-frame img{ display:block; width:100%; height:auto; }
-  .shot-viewport{
-    display:flex; align-items:center; gap:8px;
-  }
-  .shot-nav{
-    flex-shrink:0;
-    width:32px; height:32px;
-    border-radius:50%;
-    border:1px solid var(--border-default);
-    background: var(--surface-card);
-    color: var(--text-secondary);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
-  }
-  .shot-nav svg{ width:16px; height:16px; }
-  .shot-nav:hover{ border-color: var(--border-accent); color: var(--text-primary); }
-  .shot-dots{ display:flex; justify-content:center; gap:6px; margin-top:14px; }
-  .shot-dots span{ width:6px; height:6px; border-radius:50%; background:var(--border-default); transition: all .18s ease; }
-  .shot-dots span.active{ background: var(--brand-gold); width:16px; border-radius:3px; }
 
   .card{
-    background: var(--surface-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-sm);
-    padding: 18px 20px;
+    background:var(--cream-100);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:28px 22px;
+    margin-bottom:16px;
+    box-shadow:0 6px 20px -8px rgba(42,33,24,.14);
   }
+  .card-icon{
+    width:56px;height:56px;border-radius:999px;background:var(--gold-100);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--gold-500);
+  }
+  .card h2{
+    font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic','Meiryo',Arial,sans-serif;font-weight:700;
+    font-size:22px;text-align:center;margin:0 0 8px;
+  }
+  .card > p.lead{text-align:center;color:var(--brown-soft);font-size:14px;margin:0 0 20px;}
 
-  .device-note{
-    display:flex; gap:8px; align-items:flex-start;
-    margin-top:14px;
-    font-size: 13px; color: var(--text-secondary);
+  .search-box{
+    display:flex;align-items:center;gap:10px;
+    border:1px solid var(--line);border-radius:999px;
+    background:var(--cream-50);
+    padding:12px 18px;
   }
-  .device-note svg{ width:15px; height:15px; flex-shrink:0; margin-top:2px; color:var(--text-tertiary); }
+  .search-box svg{flex:none;color:var(--brown-soft);}
+  .search-box input{
+    border:0;background:transparent;outline:0;flex:1;
+    font-family:inherit;font-size:15px;color:var(--brown);min-width:0;
+  }
+  .search-hint{text-align:center;font-size:12.5px;color:var(--brown-soft);margin-top:10px;}
 
-  /* ---------- Callout boxes ---------- */
-  .callout{
-    display:flex; gap:12px;
-    border-radius: var(--radius-card);
-    padding: 16px 18px;
-    margin-top: 18px;
+  .disclaimer{
+    display:flex;gap:8px;align-items:flex-start;
+    font-size:12.5px;line-height:1.6;color:var(--brown-soft);
+    border-top:1px solid var(--line);margin-top:20px;padding-top:16px;
   }
-  .callout svg{ width:20px; height:20px; flex-shrink:0; margin-top:1px; }
-  .callout h3{ font-size:14.5px; font-weight:700; margin-bottom:4px; }
-  .callout p{ font-size:13.5px; color: var(--text-secondary); margin:0; }
-  .callout.warning{ background: var(--warning-bg); }
-  .callout.warning svg{ color: var(--warning); }
-  .callout.warning h3{ color:#7a4e0b; }
-  .callout.info{ background: var(--info-bg); }
-  .callout.info svg{ color: var(--info); }
-  .callout.info h3{ color:#2c526f; }
+  .disclaimer svg{flex:none;margin-top:2px;color:var(--gold-500);}
 
-  /* ---------- FAQ ---------- */
-  .faq-item{
-    border-bottom: 1px solid var(--border-subtle);
+  .result{
+    margin-top:18px;border-radius:14px;padding:18px;border:1px solid;
+    display:none;
   }
-  .faq-item:last-child{ border-bottom:none; }
-  .faq-q{
-    width:100%;
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-    background:none; border:none;
-    font-family: var(--font-sans);
-    text-align:left;
-    padding: 15px 2px;
-    font-size: 14.5px; font-weight:600; color:var(--text-primary);
-    cursor:pointer;
+  .result.show{display:block;}
+  .result-head{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;}
+  .result-badge{
+    display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;
+    font-size:12.5px;font-weight:700;letter-spacing:.03em;
   }
-  .faq-q svg{
-    width:18px; height:18px; flex-shrink:0; color:var(--text-tertiary);
-    transition: transform .18s var(--ease-out, ease);
-  }
-  .faq-q[aria-expanded="true"] svg{ transform: rotate(180deg); }
-  .faq-a{
-    max-height:0; overflow:hidden;
-    transition: max-height .22s var(--ease-out, ease);
-  }
-  .faq-a-inner{
-    font-size: 13.5px; color: var(--text-secondary);
-    padding: 0 2px 16px;
-  }
+  .result.ok{background:var(--ok-bg);border-color:var(--ok-line);}
+  .result.ok .result-badge{background:var(--ok-line);color:var(--ok-fg);}
+  .result.ng{background:var(--ng-bg);border-color:var(--ng-line);}
+  .result.ng .result-badge{background:var(--ng-line);color:var(--ng-fg);}
+  .result.unk{background:var(--unk-bg);border-color:var(--unk-line);}
+  .result.unk .result-badge{background:var(--unk-line);color:var(--unk-fg);}
+  .result p{margin:10px 0 0;font-size:14px;line-height:1.7;color:var(--brown-soft);}
+  .result-note{margin-top:6px !important;font-size:12.5px !important;}
+  .result-actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;}
 
-  /* ---------- Divider ---------- */
-  .divider{
-    display:flex; align-items:center; gap:14px;
-    margin: 8px 0 28px;
+  .btn{
+    display:inline-flex;align-items:center;gap:6px;
+    border-radius:999px;padding:10px 20px;font-size:14px;font-weight:700;
+    text-decoration:none;border:1px solid transparent;cursor:pointer;
+    font-family:inherit;transition:filter .15s ease;
   }
-  .divider::before,.divider::after{
-    content:""; flex:1; height:1px; background:var(--border-default);
-  }
-  .divider span{
-    font-family: var(--font-serif-accent);
-    font-size: 16px; color: var(--text-secondary);
-    white-space:nowrap;
-  }
+  .btn:active{transform:scale(.98);}
+  .btn-primary{background:var(--brown);color:var(--cream-50);}
+  .btn-primary:hover{filter:brightness(1.15);}
+  .btn-outline{background:transparent;color:var(--brown);border-color:var(--line);}
+  .btn-outline:hover{background:var(--gold-100);}
 
-  /* ---------- Top-up CTA ---------- */
-  .cta-card{
-    background: var(--surface-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-sm);
-    padding: 22px 20px;
-  }
-  .cta-card h3{ font-size:16px; font-weight:700; margin-bottom:6px; }
-  .cta-card p{ font-size:14px; color:var(--text-secondary); margin:0 0 18px; }
-  .cta-btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    width:100%;
-    background: linear-gradient(135deg,#d3b56a 0%,var(--gold-600) 100%);
-    color: var(--brown-900);
-    font-weight:700; font-size:15px;
-    padding: 13px 20px;
-    border-radius: var(--radius-pill);
-    text-decoration:none;
-    box-shadow: var(--shadow-gold-glow);
-  }
-  .cta-btn svg{ width:17px; height:17px; }
+  section.list-section{margin-top:28px;}
+  .list-section h3{font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic','Meiryo',Arial,sans-serif;font-size:19px;margin:0 0 4px;}
+  .list-section > p{color:var(--brown-soft);font-size:13.5px;margin:0 0 16px;}
 
-  /* ---------- Support ---------- */
-  .support{
-    margin-top: 16px;
+  .tabs{display:flex;gap:8px;margin-bottom:16px;}
+  .tab{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:12px 14px;border-radius:999px;border:1px solid var(--line);
+    background:var(--cream-100);color:var(--brown-soft);font-weight:700;font-size:14px;cursor:pointer;
   }
-  .line-btn{
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    width:100%;
-    background: #4CAF50;
-    color:#ffffff;
-    font-weight:700; font-size:15px;
-    padding: 13px 20px;
-    border-radius: var(--radius-pill);
-    text-decoration:none;
-  }
-  .line-btn svg{ width:19px; height:19px; }
-  .line-btn:hover{ background:#449d48; }
+  .tab.active{background:var(--brown);color:var(--cream-50);border-color:var(--brown);}
+  .tab svg{width:16px;height:16px;}
 
-  /* ---------- Feedback ---------- */
-  .feedback{
-    display:flex; align-items:center; justify-content:space-between; gap:14px;
-    flex-wrap:wrap;
-    background: var(--surface-sunken);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-card);
-    padding: 16px 18px;
-    margin-top: 26px;
+  details.brand-group{
+    border:1px solid var(--line);border-radius:14px;background:var(--cream-100);
+    margin-bottom:10px;overflow:hidden;
+    box-shadow:0 4px 14px -8px rgba(42,33,24,.12);
   }
-  .feedback p{ margin:0; font-size:14px; font-weight:600; color:var(--text-primary); }
-  .feedback-btns{ display:flex; gap:8px; }
-  .fb-btn{
-    display:flex; align-items:center; justify-content:center;
-    width:38px; height:38px;
-    border-radius:50%;
-    border:1px solid var(--border-default);
-    background: var(--surface-card);
-    color: var(--text-secondary);
-    cursor:pointer;
+  details.brand-group[open]{}
+  details.brand-group summary{
+    list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+    padding:16px 18px;font-weight:700;font-size:15px;
   }
-  .fb-btn svg{ width:17px; height:17px; }
-  .fb-btn:hover{ border-color: var(--border-accent); color: var(--text-primary); }
-  .fb-btn.picked{ background: var(--gold-100); border-color: var(--border-accent); color: var(--gold-700); }
-  .feedback.done p{ color: var(--success); }
+  details.brand-group summary::-webkit-details-marker{display:none;}
+  summary .count{font-weight:400;color:var(--brown-soft);font-size:13px;margin-left:8px;}
+  summary .chev{transition:transform .18s ease;color:var(--brown-soft);}
+  details[open] summary .chev{transform:rotate(180deg);}
+  .group-body{padding:0 18px 18px;}
+  .sub h4{font-size:12.5px;letter-spacing:.04em;color:var(--brown-soft);margin:14px 0 8px;display:flex;align-items:center;gap:6px;}
+  .sub h4 svg{width:14px;height:14px;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    padding:6px 14px;border-radius:999px;font-size:13px;border:1px solid;
+    background:var(--ok-bg);color:var(--ok-fg);border-color:var(--ok-line);
+  }
+  .chip.ng{background:var(--ng-bg);color:var(--ng-fg);border-color:var(--ng-line);}
+  .group-footnote{font-size:12px;color:var(--brown-soft);margin-top:14px;line-height:1.6;}
 
-  /* ---------- Footer ---------- */
-  footer{
-    background: var(--brand-brown);
-    color: var(--brown-200);
-    margin-top: 10px;
-    padding-block: 22px calc(env(safe-area-inset-bottom, 0px) + 22px);
-  }
-  .foot-links{
-    display:flex; gap:18px; flex-wrap:wrap;
-    font-size:13px; margin-bottom:14px;
-  }
-  .foot-links a{ color: var(--cream-0); text-decoration:none; }
-  .foot-links a:hover{ color: var(--gold-300); }
-  footer .fine{ font-size:11.5px; color: var(--brown-300); }
-
-  @media (max-width: 380px){
-    .hero h1{ font-size: 26px; }
-  }
+  .version-note{text-align:center;font-size:12px;color:var(--brown-soft);margin-top:30px;}
+  footer.bottom{text-align:center;font-size:12.5px;color:var(--brown-soft);border-top:1px solid var(--line);margin-top:24px;padding-top:20px;}
 </style>
+</head>
+<body>
 
-<header class="top">
-  <div class="wrap">
-    <div class="top-row">
-      <div class="logo">
-        <img src="assets/tabisim-lockup.png" alt="TabiSIM" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-        <span class="logo-fallback" style="display:none">TabiSIM</span>
-      </div>
-      <div class="top-actions">
-        <button class="icon-btn" aria-haspopup="true" aria-expanded="false" onclick="toggleDropdown('lang-dropdown', this)" data-i18n-aria="aria.langSelect" aria-label="言語を選択">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18Z"/></svg>
-        </button>
-
-        <div class="dropdown" id="lang-dropdown" role="menu" aria-label="言語切り替え">
-          <button role="menuitem" aria-current="true" data-lang="ja">日本語</button>
-          <button role="menuitem" data-lang="en">English</button>
-          <button role="menuitem" data-lang="zh-hant">繁體中文</button>
-          <button role="menuitem" data-lang="ko">한국어</button>
-        </div>
-      </div>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <img src="assets/tabisim-logo.png" alt="TabiSIM">
     </div>
-  </div>
-</header>
-
-<main class="wrap">
+    <div class="top-icons">
+      <button class="icon-btn" aria-label="言語切り替え" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg>
+      </button>
+    </div>
+  </header>
 
   <section class="hero">
-    <h1 data-i18n="hero.title">データ使用量の確認方法</h1>
-    <p data-i18n="hero.desc">残りのデータ量は、スマホの設定画面からいつでも確認できます。</p>
+    <h1>eSIM対応チェック</h1>
+    <p>お使いのスマートフォンでTabiSIMが使えるか、出発前にかんたんに確認できます。</p>
   </section>
 
-  <section class="section" id="usage-check">
-    <div class="section-head">
-      <span class="num">1</span>
-      <h2 data-i18n="section1.title">データ残量を確認する</h2>
+  <section class="card">
+    <div class="card-icon">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>
+    </div>
+    <h2>eSIM対応機種チェッカー</h2>
+    <p class="lead">機種名を入力すると、eSIMに対応しているかをすぐにお知らせします。</p>
+
+    <div class="search-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search-input" type="text" inputmode="search" placeholder="機種名を入力（例：iPhone 15、Galaxy S24）" aria-label="機種名を入力">
+    </div>
+    <p class="search-hint">メーカー名とモデル名をあわせて入力すると、より正確に判定できます。</p>
+
+    <div id="result" class="result">
+      <div class="result-head">
+        <span id="result-badge" class="result-badge"></span>
+        <span id="result-title"></span>
+      </div>
+      <p id="result-body"></p>
+      <p id="result-note" class="result-note" hidden></p>
+      <div class="result-actions" id="result-actions"></div>
     </div>
 
-    <div class="segmented" role="tablist" aria-label="OS選択">
-      <button role="tab" id="tab-ios" aria-controls="panel-ios" aria-selected="true" onclick="selectOS('ios')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.2"/><line x1="10.5" y1="18.3" x2="13.5" y2="18.3"/></svg>
-        iPhone (iOS)
+    <div class="disclaimer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <span>本情報はTabiSIMの独自調査にもとづく参考情報であり、対応を保証するものではありません。SIMフリーまたはSIMロック解除済みの端末が対象です。ご心配な場合はお気軽にサポートへお問い合わせください。</span>
+    </div>
+  </section>
+
+  <section class="list-section">
+    <h3>ブランド別の対応機種一覧</h3>
+    <p>検索しなくても、メーカーごとに対応機種を確認できます。</p>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="apple" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+        iPhone / iPad
       </button>
-      <button role="tab" id="tab-android" aria-controls="panel-android" aria-selected="false" onclick="selectOS('android')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2.2"/><line x1="9" y1="6.3" x2="15" y2="6.3"/></svg>
+      <button class="tab" data-tab="android" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
         Android
       </button>
     </div>
 
-    <!-- iOS panel -->
-    <div class="panel active" id="panel-ios" role="tabpanel" aria-labelledby="tab-ios">
-      <div class="card">
-        <div class="step-head">
-          <span class="step-badge" data-step-badge>1</span>
-          <span class="step-label" data-step-label>Cellular（モバイル通信）をタップ</span>
+    <div id="panel-apple">
+      <details class="brand-group" open>
+        <summary>iPhone <span class="count" id="iphone-count"></span><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="group-body">
+          <div class="sub"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>対応</h4><div class="chip-row" id="iphone-ok"></div></div>
+          <div class="sub"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>非対応</h4><div class="chip-row" id="iphone-ng"></div></div>
+          <p class="group-footnote">※ 中国本土向けモデルはiPhone AirとiPhone 17eのみ対応。香港・マカオ向けの一部はnano-SIM仕様のため非対応です。iPhone 18 / Duoは発表直後のため、仕様は変更される可能性があります。</p>
         </div>
-        <div class="shot-viewport">
-          <button class="shot-nav" data-i18n-aria="aria.prev" aria-label="前の手順" onclick="navCarousel(this,-1)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
-          </button>
-          <div class="shot-carousel" data-carousel="ios" data-steps='["Cellular（モバイル通信）をタップ","Current Period（現在の期間）で使用量を確認","Reset Statistics（統計をリセット）で渡航前にリセット"]'>
-            <div class="shot-slide">
-              <div class="shot-frame">
-                <img src="shots/ios-1-cellular.webp" alt="設定画面。「Cellular」の項目が赤枠で囲まれている" loading="lazy">
-              </div>
-            </div>
-            <div class="shot-slide">
-              <div class="shot-frame">
-                <img src="shots/ios-2-current-period.webp" alt="Cellular画面。「Current Period」の使用データ量が赤枠で囲まれている" loading="lazy">
-              </div>
-            </div>
-            <div class="shot-slide">
-              <div class="shot-frame">
-                <img src="shots/ios-3-reset.webp" alt="Cellular画面を下にスクロールした先。「Reset Statistics」が赤枠で囲まれている" loading="lazy">
-              </div>
-            </div>
-          </div>
-          <button class="shot-nav" data-i18n-aria="aria.next" aria-label="次の手順" onclick="navCarousel(this,1)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-          </button>
+      </details>
+      <details class="brand-group">
+        <summary>iPad <span class="count" id="ipad-count"></span><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="group-body">
+          <div class="sub"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>対応（Wi-Fi+Cellularモデルのみ）</h4><div class="chip-row" id="ipad-ok"></div></div>
+          <p class="group-footnote">Wi-Fi専用モデルはeSIM非対応です。Apple Watchは本チェッカーの対象外です（旅行用eSIM自体がインストールできません）。</p>
         </div>
-        <div class="shot-dots" aria-hidden="true"></div>
-      </div>
+      </details>
     </div>
 
-    <!-- Android panel -->
-    <div class="panel" id="panel-android" role="tabpanel" aria-labelledby="tab-android">
-      <div class="subtabs" role="tablist" aria-label="Androidメーカー選択">
-        <button role="tab" aria-selected="true" onclick="selectMaker('samsung', this)">Samsung</button>
-        <button role="tab" aria-selected="false" onclick="selectMaker('pixel', this)">Google Pixel</button>
-      </div>
+    <div id="panel-android" hidden></div>
 
-      <div class="card">
-        <!-- Samsung -->
-        <div class="maker-panel" data-maker="samsung">
-          <div class="step-head">
-            <span class="step-badge" data-step-badge>1</span>
-            <span class="step-label" data-step-label>Connections（接続）をタップ</span>
-          </div>
-          <div class="shot-viewport">
-            <button class="shot-nav" data-i18n-aria="aria.prev" aria-label="前の手順" onclick="navCarousel(this,-1)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
-            </button>
-            <div class="shot-carousel" data-carousel="samsung" data-steps='["Connections（接続）をタップ","Data usage（データ使用量）をタップ","Mobile data usage（モバイルデータ使用量）を確認"]'>
-              <div class="shot-slide">
-                <div class="shot-frame">
-                  <img src="shots/samsung-1-settings.webp" alt="設定画面。「Connections」の項目が赤枠で囲まれている" loading="lazy">
-                </div>
-              </div>
-              <div class="shot-slide">
-                <div class="shot-frame">
-                  <img src="shots/samsung-2-connections.webp" alt="Connections画面。「Data usage」の項目が赤枠で囲まれている" loading="lazy">
-                </div>
-              </div>
-              <div class="shot-slide">
-                <div class="shot-frame">
-                  <img src="shots/samsung-3-usage.webp" alt="Data usage画面。「Mobile data usage」の欄が赤枠で囲まれている" loading="lazy">
-                </div>
-              </div>
-            </div>
-            <button class="shot-nav" data-i18n-aria="aria.next" aria-label="次の手順" onclick="navCarousel(this,1)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-            </button>
-          </div>
-          <div class="shot-dots" aria-hidden="true"></div>
-        </div>
-
-        <!-- Pixel -->
-        <div class="maker-panel" data-maker="pixel" hidden>
-          <div class="step-head">
-            <span class="step-badge" data-step-badge>1</span>
-            <span class="step-label" data-step-label>Network &amp; internet（ネットワーク）をタップ</span>
-          </div>
-          <div class="shot-viewport">
-            <button class="shot-nav" data-i18n-aria="aria.prev" aria-label="前の手順" onclick="navCarousel(this,-1)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
-            </button>
-            <div class="shot-carousel" data-carousel="pixel" data-steps='["Network &amp; internet（ネットワーク）をタップ","SIMs をタップ","使用データ量を確認"]'>
-              <div class="shot-slide">
-                <div class="shot-frame">
-                  <img src="shots/pixel-1-settings.webp" alt="設定画面。「Network &amp; internet」の項目が赤枠で囲まれている" loading="lazy">
-                </div>
-              </div>
-              <div class="shot-slide">
-                <div class="shot-frame">
-                  <img src="shots/pixel-2-sims.webp" alt="Network &amp; internet画面。「SIMs」の項目が赤枠で囲まれている" loading="lazy">
-                </div>
-              </div>
-              <div class="shot-slide">
-                <div class="shot-frame">
-                  <img src="shots/pixel-3-usage.webp" alt="SIM詳細画面。上部に使用データ量、下に「App data usage」の項目が赤枠で囲まれている" loading="lazy">
-                </div>
-              </div>
-            </div>
-            <button class="shot-nav" data-i18n-aria="aria.next" aria-label="次の手順" onclick="navCarousel(this,1)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-            </button>
-          </div>
-          <div class="shot-dots" aria-hidden="true"></div>
-        </div>
-
-        <div class="device-note">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>
-          <span data-i18n="deviceNote">上記2機種以外をお使いの場合も、「接続」または「ネットワークとインターネット」の中に「データ使用量」に近い項目があります。見つからない場合はサポートまでご連絡ください。</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="callout warning">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 2.6 17.5a1.8 1.8 0 0 0 1.6 2.7h15.6a1.8 1.8 0 0 0 1.6-2.7L13.7 3.9a1.8 1.8 0 0 0-3.4 0Z"/><path d="M12 9.5v4M12 17v.01"/></svg>
-      <div>
-        <h3 data-i18n="warning.title">渡航前に、データ使用量をリセットしておきましょう</h3>
-        <p data-i18n="warning.desc">他の回線の分と合算表示されるのを防げます（iOSは上のSTEP3）。</p>
-      </div>
-    </div>
-
-    <div style="margin-top:20px">
-      <div class="faq-item">
-        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
-          <span data-i18n="faq1.q">表示されている残量が、実際の使用感と合わない気がします</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-a">
-          <div class="faq-a-inner" data-i18n="faq1.a">数分ほど遅れて反映されることがあります。少し時間を置いてから確認してください。</div>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
-          <span data-i18n="faq2.q">「データ使用量」の項目が見当たりません</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-a">
-          <div class="faq-a-inner" data-i18n="faq2.a">機種により名称が異なります。見つからない場合はサポートまでご連絡ください。</div>
-        </div>
-      </div>
-    </div>
+    <p class="version-note">データ更新: v1（2026-09-23確定）</p>
   </section>
 
-  <div class="divider"><span data-i18n="divider">データが足りなくなったら</span></div>
-
-  <section class="section" id="topup" style="padding-top:0">
-    <div class="cta-card">
-      <h3 data-i18n="topup.title">eSIMにそのままデータを追加</h3>
-      <p data-i18n="topup.desc">Top-up（追加チャージ）は、tabisim.jpでプランを購入した方のみご利用いただけます。</p>
-      <a class="cta-btn" href="https://tabisim.jp/plans/japan" target="_blank" rel="noopener">
-        <span data-i18n="topup.cta">日本向けプランを見る</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
-      </a>
-    </div>
-  </section>
-
-  <section class="section" id="support" style="padding-top:0">
-    <div class="section-head">
-      <span class="num">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.5 2.5 0 0 1 4.8.9c0 1.7-2.3 2-2.3 3.4"/><circle cx="12" cy="17" r="0.3" fill="currentColor" stroke="none"/></svg>
-      </span>
-      <h2 data-i18n="support.title">それでも解決しない場合</h2>
-    </div>
-    <div class="support">
-      <a class="line-btn" href="https://line.me/R/ti/p/%40tabisim" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C7 3 3 6.4 3 10.6c0 2.7 1.7 5.1 4.3 6.5-.2.9-.7 2.4-.8 2.8-.1.4.2.4.4.3.2-.1 2.6-1.7 3.6-2.4.5.1 1 .1 1.5.1 5 0 9-3.4 9-7.6S17 3 12 3Z"/></svg>
-        <span data-i18n="line.cta">LINE公式アカウントを追加</span>
-      </a>
-    </div>
-
-    <div class="feedback" id="feedback">
-      <p id="feedback-text" data-i18n="feedback.q">このページは役に立ちましたか？</p>
-      <div class="feedback-btns">
-        <button class="fb-btn" data-i18n-aria="aria.helpful" aria-label="役に立った" onclick="sendFeedback(true, this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v11H4V10h3Zm0 0 4.5-7a1.8 1.8 0 0 1 3.2 1.4L13.5 10H19a2 2 0 0 1 1.9 2.7l-2 6A2 2 0 0 1 17 20H7"/></svg>
-        </button>
-        <button class="fb-btn" data-i18n-aria="aria.notHelpful" aria-label="役に立たなかった" onclick="sendFeedback(false, this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 14V3h3v11h-3Zm0 0-4.5 7a1.8 1.8 0 0 1-3.2-1.4L10.5 14H5a2 2 0 0 1-1.9-2.7l2-6A2 2 0 0 1 7 4h10"/></svg>
-        </button>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <div class="wrap">
-    <div class="foot-links">
-      <a href="./install.html" data-i18n="header.menuInstall">インストールガイド</a>
-      <a href="./check.html" data-i18n="header.menuCheck">対応機種チェッカー</a>
-    </div>
-    <div class="fine">© TabiSIM / HENZA</div>
-  </div>
-</footer>
+  <footer class="bottom">TabiSIM / HENZA</footer>
+</div>
 
 <script>
-  function selectOS(os){
-    document.getElementById('tab-ios').setAttribute('aria-selected', os==='ios');
-    document.getElementById('tab-android').setAttribute('aria-selected', os==='android');
-    document.getElementById('panel-ios').classList.toggle('active', os==='ios');
-    document.getElementById('panel-android').classList.toggle('active', os==='android');
-    try{ localStorage.setItem('tabisim-os', os); }catch(e){}
-  }
-
-  function selectMaker(maker, btn){
-    var group = btn.closest('.subtabs');
-    group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-selected', b === btn); });
-    var panelRoot = btn.closest('#panel-android');
-    panelRoot.querySelectorAll('.maker-panel').forEach(function(p){
-      p.hidden = p.getAttribute('data-maker') !== maker;
-    });
-    try{ localStorage.setItem('tabisim-maker', maker); }catch(e){}
-  }
-
-  (function restoreSelection(){
-    try{
-      var os = localStorage.getItem('tabisim-os');
-      if (os === 'android') selectOS('android');
-      var maker = localStorage.getItem('tabisim-maker');
-      if (maker){
-        var btn = document.querySelector('.subtabs button[onclick*="\'' + maker + '\'"]');
-        if (btn) selectMaker(maker, btn);
-      }
-    }catch(e){}
-  })();
-
-  function initCarousels(){
-    document.querySelectorAll('[data-carousel]').forEach(function(track){
-      var viewport = track.closest('.shot-viewport');
-      var dots = viewport ? viewport.nextElementSibling : null;
-      if (!dots || !dots.classList.contains('shot-dots')) return;
-      var group = viewport.parentElement;
-      var badge = group.querySelector('[data-step-badge]');
-      var label = group.querySelector('[data-step-label]');
-      var steps = [];
-      try{ steps = JSON.parse(track.getAttribute('data-steps') || '[]'); }catch(e){}
-      var slides = track.querySelectorAll('.shot-slide');
-      dots.innerHTML = '';
-      slides.forEach(function(_, i){
-        var d = document.createElement('span');
-        if (i === 0) d.classList.add('active');
-        dots.appendChild(d);
-      });
-      var dotEls = dots.querySelectorAll('span');
-      function setIndex(idx){
-        idx = Math.max(0, Math.min(idx, dotEls.length - 1));
-        dotEls.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
-        if (badge) badge.textContent = idx + 1;
-        if (label && steps[idx]) label.textContent = steps[idx];
-      }
-      var ticking = false;
-      track.addEventListener('scroll', function(){
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(function(){
-          var slideW = slides[0].getBoundingClientRect().width + 14;
-          var idx = Math.round(track.scrollLeft / slideW);
-          setIndex(idx);
-          ticking = false;
-        });
-      }, { passive: true });
-    });
-  }
-  initCarousels();
-
-  function navCarousel(btn, dir){
-    var viewport = btn.closest('.shot-viewport');
-    var track = viewport.querySelector('[data-carousel]');
-    var slideW = track.querySelector('.shot-slide').getBoundingClientRect().width + 14;
-    track.scrollBy({ left: dir * slideW, behavior: 'smooth' });
-  }
-
-  function sendFeedback(helpful, btn){
-    var box = document.getElementById('feedback');
-    var text = document.getElementById('feedback-text');
-    box.querySelectorAll('.fb-btn').forEach(function(b){ b.classList.remove('picked'); b.disabled = true; });
-    btn.classList.add('picked');
-    box.classList.add('done');
-    var t = I18N[currentLang] || I18N.ja;
-    text.removeAttribute('data-i18n');
-    text.textContent = helpful ? t['feedback.yes'] : t['feedback.no'];
-    try{
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'support_page_feedback', page: 'data-usage-guide', helpful: helpful });
-    }catch(e){}
-  }
-
-  function toggleFaq(btn){
-    var expanded = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', String(!expanded));
-    var answer = btn.nextElementSibling;
-    var inner = answer.querySelector('.faq-a-inner');
-    answer.style.maxHeight = expanded ? '0px' : (inner.scrollHeight + 20) + 'px';
-  }
-
-  function toggleDropdown(id, trigger){
-    var panel = document.getElementById(id);
-    var isOpen = panel.classList.contains('open');
-    document.querySelectorAll('.dropdown.open').forEach(function(d){ d.classList.remove('open'); });
-    document.querySelectorAll('.icon-btn[aria-expanded="true"]').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
-    if (!isOpen){
-      panel.classList.add('open');
-      trigger.setAttribute('aria-expanded','true');
-    }
-  }
-  document.addEventListener('click', function(e){
-    if (!e.target.closest('.top-actions')){
-      document.querySelectorAll('.dropdown.open').forEach(function(d){ d.classList.remove('open'); });
-      document.querySelectorAll('.icon-btn[aria-expanded="true"]').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
-    }
-  });
-
-  /* ---------- i18n ---------- */
-  var I18N = {
-    ja: {
-      title: 'データ使用量ガイド',
-      'header.menuInstall': 'インストールガイド',
-      'header.menuCheck': '対応機種チェッカー',
-      'header.menuCurrent': 'データ使用量ガイド',
-      'hero.title': 'データ使用量の確認方法',
-      'hero.desc': '残りのデータ量は、スマホの設定画面からいつでも確認できます。',
-      'section1.title': 'データ残量を確認する',
-      'deviceNote': '上記2機種以外をお使いの場合も、「接続」または「ネットワークとインターネット」の中に「データ使用量」に近い項目があります。見つからない場合はサポートまでご連絡ください。',
-      'warning.title': '渡航前に、データ使用量をリセットしておきましょう',
-      'warning.desc': '他の回線の分と合算表示されるのを防げます（iOSは上のSTEP3）。',
-      'faq1.q': '表示されている残量が、実際の使用感と合わない気がします',
-      'faq1.a': '数分ほど遅れて反映されることがあります。少し時間を置いてから確認してください。',
-      'faq2.q': '「データ使用量」の項目が見当たりません',
-      'faq2.a': '機種により名称が異なります。見つからない場合はサポートまでご連絡ください。',
-      'divider': 'データが足りなくなったら',
-      'topup.title': 'eSIMにそのままデータを追加',
-      'topup.desc': 'Top-up（追加チャージ）は、tabisim.jpでプランを購入した方のみご利用いただけます。',
-      'topup.cta': '日本向けプランを見る',
-      'support.title': 'それでも解決しない場合',
-      'line.cta': 'LINE公式アカウントを追加',
-      'feedback.q': 'このページは役に立ちましたか？',
-      'feedback.yes': 'ありがとうございます。',
-      'feedback.no': 'ご意見ありがとうございます。サポートまでご連絡ください。',
-      'aria.langSelect': '言語を選択',
-      'aria.menu': 'メニュー',
-      'aria.prev': '前の手順',
-      'aria.next': '次の手順',
-      'aria.helpful': '役に立った',
-      'aria.notHelpful': '役に立たなかった'
-    },
-    en: {
-      title: 'Data Usage Guide',
-      'header.menuInstall': 'Installation Guide',
-      'header.menuCheck': 'Compatibility Checker',
-      'header.menuCurrent': 'Data Usage Guide',
-      'hero.title': 'How to check your data usage',
-      'hero.desc': "You can check your remaining data anytime from your phone's settings.",
-      'section1.title': 'Check your remaining data',
-      'deviceNote': "If you use another device, look for a similar item under “Connections” or “Network & internet”. Contact support if you can't find it.",
-      'warning.title': 'Reset your data usage before you travel',
-      'warning.desc': 'This keeps it from being combined with other lines (iOS: see STEP 3 above).',
-      'faq1.q': "The usage shown doesn't match what I expect",
-      'faq1.a': 'It can take a few minutes to update. Please check again after a short while.',
-      'faq2.q': 'I can’t find the “Data usage” item',
-      'faq2.a': "The name may vary by device. Please contact support if you still can't find it.",
-      'divider': 'If you run out of data',
-      'topup.title': 'Add data straight to your eSIM',
-      'topup.desc': 'Top-up is available only for customers who purchased a plan on tabisim.jp.',
-      'topup.cta': 'View Japan plans',
-      'support.title': 'Still need help?',
-      'line.cta': 'Add our LINE Official Account',
-      'feedback.q': 'Was this page helpful?',
-      'feedback.yes': 'Thank you!',
-      'feedback.no': 'Thanks for the feedback. Please contact support.',
-      'aria.langSelect': 'Select language',
-      'aria.menu': 'Menu',
-      'aria.prev': 'Previous step',
-      'aria.next': 'Next step',
-      'aria.helpful': 'Helpful',
-      'aria.notHelpful': 'Not helpful'
-    },
-    'zh-hant': {
-      title: '數據用量指南',
-      'header.menuInstall': '安裝指南',
-      'header.menuCheck': '相容機型檢查器',
-      'header.menuCurrent': '數據用量指南',
-      'hero.title': '如何查詢數據用量',
-      'hero.desc': '您可以隨時從手機的設定畫面查看剩餘的數據用量。',
-      'section1.title': '查詢剩餘數據量',
-      'deviceNote': '若您使用其他機型，也可以在「連線」或「網路和網際網路」中找到類似的「數據使用量」項目。若找不到，請聯絡客服。',
-      'warning.title': '出發前建議重設數據使用量',
-      'warning.desc': '可避免與其他門號的用量合併顯示（iOS 請參考上方 STEP3）。',
-      'faq1.q': '顯示的用量與實際使用感覺不符',
-      'faq1.a': '數據可能會廲遲幾分鐘才更新，請稍後再確認。',
-      'faq2.q': '找不到「數據使用量」選項',
-      'faq2.a': '不同機型名稱可能不同，若仍找不到請聯絡客服。',
-      'divider': '數據用量不足時',
-      'topup.title': '直接為 eSIM 加購數據',
-      'topup.desc': '加值（Top-up）僅限於在 tabisim.jp 購買方案的顧客使用。',
-      'topup.cta': '查看日本方案',
-      'support.title': '仍未解決問題？',
-      'line.cta': '加入 LINE 官方帳號',
-      'feedback.q': '這個頁面對您有幫助嗎？',
-      'feedback.yes': '謝謝您的回饋！',
-      'feedback.no': '感謝您的意見，請聯絡客服。',
-      'aria.langSelect': '選擇語言',
-      'aria.menu': '選單',
-      'aria.prev': '上一步',
-      'aria.next': '下一步',
-      'aria.helpful': '有幫助',
-      'aria.notHelpful': '沒幫助'
-    },
-    ko: {
-      title: '데이터 사용량 가이드',
-      'header.menuInstall': '설치 가이드',
-      'header.menuCheck': '기기 호환성 확인',
-      'header.menuCurrent': '데이터 사용량 가이드',
-      'hero.title': '데이터 사용량 확인 방법',
-      'hero.desc': '남은 데이터 용량은 스마트폰 설정 화면에서 언제든지 확인할 수 있습니다.',
-      'section1.title': '데이터 잔량 확인하기',
-      'deviceNote': '다른 기기를 사용 중이시라면 \'연결\' 또는 \'네트워크 및 인터넷\'에서 비슷한 항목을 확인하세요. 찾을 수 없다면 고객센터로 문의해 주세요.',
-      'warning.title': '여행 전에 데이터 사용량을 초기화해두세요',
-      'warning.desc': '다른 회선과 합산 표시되는 것을 방지할 수 있습니다 (iOS는 위 STEP3 참고).',
-      'faq1.q': '표시된 사용량이 실제 체감과 다른 것 같아요',
-      'faq1.a': '반영까지 몇 분 정도 지연될 수 있습니다. 잠시 후 다시 확인해 주세요.',
-      'faq2.q': "'데이터 사용량' 항목을 찾을 수 없어요",
-      'faq2.a': '기기에 따라 명칭이 다를 수 있습니다. 찾을 수 없다면 고객센터로 문의해 주세요.',
-      'divider': '데이터가 부족할 때',
-      'topup.title': 'eSIM에 바로 데이터 추가',
-      'topup.desc': 'Top-up(추가 충전)은 tabisim.jp에서 요금제를 구매하신 분만 이용하실 수 있습니다.',
-      'topup.cta': '일본 요금제 보기',
-      'support.title': '그래도 해결되지 않으신다면',
-      'line.cta': 'LINE 공식 계정 추가하기',
-      'feedback.q': '이 페이지가 도움이 되었나요?',
-      'feedback.yes': '감사합니다!',
-      'feedback.no': '의견 감사합니다. 고객센터로 문의해 주세요.',
-      'aria.langSelect': '언어 선택',
-      'aria.menu': '메뉴',
-      'aria.prev': '이전 단계',
-      'aria.next': '다음 단계',
-      'aria.helpful': '도움될',
-      'aria.notHelpful': '도움 안됨'
-    }
-  };
-
-  var STEP_I18N = {
-    ios: {
-      ja: ['Cellular（モバイル通信）をタップ','Current Period（現在の期間）で使用量を確認','Reset Statistics（統計をリセット）で渡航前にリセット'],
-      en: ['Tap Cellular','Check usage under Current Period','Reset before travel with Reset Statistics'],
-      'zh-hant': ['點選 Cellular（行動網路）','在 Current Period（目前週期）中查看用量','出發前請用 Reset Statistics（重設統計）重設'],
-      ko: ['Cellular(모바일 데이터)를 탭하세요','Current Period(현재 기간)에서 사용량 확인','여행 전 Reset Statistics(통계 재설정)으로 초기화']
-    },
-    samsung: {
-      ja: ['Connections（接続）をタップ','Data usage（データ使用量）をタップ','Mobile data usage（モバイルデータ使用量）を確認'],
-      en: ['Tap Connections','Tap Data usage','Check Mobile data usage'],
-      'zh-hant': ['點選 Connections（連線）','點選 Data usage（數據使用量）','查看 Mobile data usage（行動數據使用量）'],
-      ko: ['Connections(연결)를 탭하세요','Data usage(데이터 사용량)를 탭하세요','Mobile data usage(모바일 데이터 사용량) 확인']
+(function(){
+  // ---------- Master data (v1, 2026-09-23) ----------
+  var DB = {
+    iphone: {
+      brandLabel: "iPhone",
+      method: "blacklist",
+      unsupported: ["初代","3G","3GS","4","4S","5","5c","5s","6","6 Plus","6s","6s Plus","SE (第1世代)","7","7 Plus","8","8 Plus","X"],
+      supportedDisplay: ["18","18 Pro","Ultra","Duo","17","17 Pro","17 Pro Max","17e","Air","16","16 Plus","16 Pro","16 Pro Max","16e","15","15 Plus","15 Pro","15 Pro Max","14","14 Plus","14 Pro","14 Pro Max","13 mini","13","13 Pro","13 Pro Max","12 mini","12","12 Pro","12 Pro Max","11","11 Pro","11 Pro Max","XS","XS Max","XR","SE (第2/3世代)"]
     },
     pixel: {
-      ja: ['Network & internet（ネットワーク）をタップ','SIMs をタップ','使用データ量を確認'],
-      en: ['Tap Network & internet','Tap SIMs','Check your data usage'],
-      'zh-hant': ['點選 Network & internet（網路）','點選 SIMs','查看數據使用量'],
-      ko: ['Network & internet(네트워크)를 탭하세요','SIMs를 탭하세요','데이터 사용량 확인']
-    }
+      brandLabel: "Google Pixel",
+      method: "blacklist",
+      unsupported: ["初代 (2016)"],
+      supportedDisplay: ["2","2 XL","3","3 XL","3a","3a XL","4","4 XL","4a","4a (5G)","5","5a (5G)","6","6 Pro","6a","7","7 Pro","7a","Fold","8","8 Pro","8a","9","9 Pro","9 Pro XL","9 Pro Fold","9a","10","10 Pro","10 Pro XL","10 Pro Fold","10a","11","11 Pro","11 Pro XL","11 Pro Fold"]
+    },
+    galaxy: {
+      brandLabel: "Samsung Galaxy",
+      method: "whitelist_unknown",
+      list: ["S20","S21","S22","S23","S24","S25","S26","Note 20","Note 20 Ultra 5G","Z Fold","Z Flip","A23","A25","A27","A36","A54","A55","A56","A57 5G","XCover 7"]
+    },
+    xperia: {
+      brandLabel: "Sony Xperia",
+      method: "whitelist_unknown",
+      list: ["1 IV","1 V","1 VI","SO-51E","1 VII","1 VIII","5 IV","5 V","10 III Lite","10 IV","10 V","SO-52D","10 VI","10 VII","Ace III"]
+    },
+    aquos: {
+      brandLabel: "AQUOS（シャープ）",
+      method: "whitelist_unknown",
+      list: ["R7","R8","R9","R10","R11","sense6","sense7","sense8","sense9","sense10","wish","wish2","wish3","wish4","wish5","zero6","シンプルスマホ6","シンプルスマホ7","BASIO active2"]
+    },
+    motorola: {
+      brandLabel: "Motorola",
+      method: "whitelist_unknown",
+      list: ["razr","edge","moto g"]
+    },
+    xiaomi: {
+      brandLabel: "Xiaomi / Redmi / POCO",
+      method: "whitelist",
+      list: ["12T Pro","13","13 Lite","13 Pro","13T","13T Pro","14","14 Pro","14T","14T Pro","15","15 Pro","15T","15T Pro","15 Ultra","17","17T","17T Pro","17 Ultra",
+             "Redmi Note 10T","Redmi Note 11 Pro 5G","Redmi Note 13 Pro","Redmi Note 13 Pro+","Redmi Note 14 Pro","Redmi Note 14 Pro+","Redmi Note 15 Pro+ 5G","Redmi 12 5G",
+             "POCO F8 Pro","POCO F8 Ultra","POCO X7","POCO X8 Pro Max"]
+    },
+    oppo: {
+      brandLabel: "OPPO",
+      method: "whitelist",
+      list: ["Find X3","Find X3 Pro","Find X5","Find X5 Pro","Find X8","Find X8 Pro","Find X9","Find X9 Ultra",
+             "Find N2 Flip","Find N3","Find N3 Flip","Find N6",
+             "Reno 5 A","Reno 6 Pro 5G","Reno 7 A","Reno 9 A","Reno 10 Pro 5G","Reno 11 A","Reno 13 5G","Reno 13 A","Reno 13 F 5G","Reno 13 Pro 5G","Reno 14 5G","Reno 14 F","Reno 14 FS","Reno 14 Pro","Reno 15","Reno 15 A","Reno 15 F","Reno 15 Pro","Reno 15 Pro Max","Reno 16","Reno 16 F","Reno 16 Pro",
+             "A3 5G","A5 5G","A55s 5G","A73","A79 5G"]
+    },
+    vivo: {
+      brandLabel: "Vivo",
+      method: "whitelist",
+      list: ["X80 Pro","X90 Pro","X100 Pro","X200","X200 Pro","X200 Pro Mini","X300","X300 Pro","V29","V29e","V40","V40e","V40 Pro","Fold5"]
+    },
+    huawei: {
+      brandLabel: "Huawei",
+      method: "whitelist",
+      list: ["P40","P40 Pro 5G","Mate 40 Pro","Pura 70 Pro","Pura 80 Pro","Pura 80 Ultra","Pura X"],
+      knownUnsupported: ["P40 Pro+","P50 Pro"]
+    },
+    ipad: {
+      brandLabel: "iPad",
+      method: "whitelist",
+      list: ["Pro 13インチ (M4)","Pro 13インチ (M5)","Pro 12.9インチ (第3世代)","Pro 12.9インチ (第4世代)","Pro 12.9インチ (第5世代)","Pro 12.9インチ (第6世代)","Pro 11インチ (第1世代)","Pro 11インチ (第2世代)","Pro 11インチ (第3世代)","Pro 11インチ (第4世代)","Pro 11インチ (M4)","Pro 11インチ (M5)","Air 13インチ (M2)","Air 13インチ (M3)","Air 13インチ (M4)","Air 11インチ (M2)","Air 11インチ (M3)","Air 11インチ (M4)","Air (第3世代)","Air (第4世代)","Air (第5世代)","iPad (A16)","iPad (第7世代)","iPad (第8世代)","iPad (第9世代)","iPad (第10世代)","mini (A17 Pro)","mini (第5世代)","mini (第6世代)"]
+    },
+    watch: { brandLabel: "Apple Watch", excluded: true }
   };
 
-  var HTML_LANG = { ja:'ja', en:'en', 'zh-hant':'zh-Hant', ko:'ko' };
-  var currentLang = 'ja';
+  var UNKNOWN_BRANDS = ["galaxy","xperia","aquos","motorola"];
+  var WHITELIST_BRANDS = ["xiaomi","oppo","vivo","huawei"];
 
-  function refreshCarouselStep(track){
-    var viewport = track.closest('.shot-viewport');
-    var dots = viewport ? viewport.nextElementSibling : null;
-    var group = viewport ? viewport.parentElement : null;
-    if (!group) return;
-    var badge = group.querySelector('[data-step-badge]');
-    var label = group.querySelector('[data-step-label]');
-    var idx = 0;
-    if (dots){
-      var active = dots.querySelector('span.active');
-      var all = dots.querySelectorAll('span');
-      if (active) idx = Array.prototype.indexOf.call(all, active);
+  // ---------- normalize helper ----------
+  function norm(s){
+    return s.toLowerCase()
+      .replace(/[\s\-_/]+/g,"")
+      .replace(/[＋+]/g,"plus")
+      .replace(/ｐｒｏ/g,"pro");
+  }
+
+  function matchList(input, list){
+    var n = norm(input);
+    for (var i=0;i<list.length;i++){
+      if (n.indexOf(norm(list[i])) !== -1 || norm(list[i]).indexOf(n) !== -1) return list[i];
     }
-    var steps = [];
-    try{ steps = JSON.parse(track.getAttribute('data-steps') || '[]'); }catch(e){}
-    if (badge) badge.textContent = idx + 1;
-    if (label && steps[idx]) label.textContent = steps[idx];
+    return null;
   }
 
-  function applyLanguage(lang){
-    if (!I18N[lang]) lang = 'ja';
-    currentLang = lang;
-    var dict = I18N[lang];
-
-    document.documentElement.lang = HTML_LANG[lang] || 'ja';
-    document.title = dict.title;
-
-    document.querySelectorAll('[data-i18n]').forEach(function(el){
-      var key = el.getAttribute('data-i18n');
-      if (dict[key]) el.textContent = dict[key];
-    });
-    document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
-      var key = el.getAttribute('data-i18n-aria');
-      if (dict[key]) el.setAttribute('aria-label', dict[key]);
-    });
-
-    document.querySelectorAll('[data-carousel]').forEach(function(track){
-      var id = track.getAttribute('data-carousel');
-      var stepSet = STEP_I18N[id];
-      if (!stepSet) return;
-      var steps = stepSet[lang] || stepSet.ja;
-      track.setAttribute('data-steps', JSON.stringify(steps));
-      refreshCarouselStep(track);
-    });
-
-    document.querySelectorAll('#lang-dropdown button').forEach(function(btn){
-      var isCurrent = btn.getAttribute('data-lang') === lang;
-      if (isCurrent) btn.setAttribute('aria-current', 'true');
-      else btn.removeAttribute('aria-current');
-    });
-
-    try{ localStorage.setItem('tabisim-lang', lang); }catch(e){}
+  function detectBrand(raw){
+    var s = raw.toLowerCase();
+    if (/iphone/.test(s)) return "iphone";
+    if (/ipad/.test(s)) return "ipad";
+    if (/apple\s*watch|watch/.test(s)) return "watch";
+    if (/pixel/.test(s)) return "pixel";
+    if (/galaxy|samsung/.test(s)) return "galaxy";
+    if (/xperia|sony/.test(s)) return "xperia";
+    if (/aquos|sharp|シャープ|sense|wish|basio/.test(s)) return "aquos";
+    if (/moto|razr|edge/.test(s)) return "motorola";
+    if (/xiaomi|redmi|poco/.test(s)) return "xiaomi";
+    if (/oppo|find x|find n|reno/.test(s)) return "oppo";
+    if (/vivo/.test(s)) return "vivo";
+    if (/huawei|pura|mate/.test(s)) return "huawei";
+    return null;
   }
 
-  document.querySelectorAll('#lang-dropdown button').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      applyLanguage(btn.getAttribute('data-lang'));
-      document.getElementById('lang-dropdown').classList.remove('open');
-    });
+  function check(raw){
+    raw = raw.trim();
+    if (!raw) return null;
+    var brandKey = detectBrand(raw);
+    if (!brandKey){
+      return {status:"unknown_brand"};
+    }
+    var brand = DB[brandKey];
+    if (brand.excluded){
+      return {status:"excluded", brand:brand};
+    }
+
+    if (brand.method === "blacklist"){
+      var hitNg = matchList(raw, brand.unsupported);
+      return { status: hitNg ? "ng" : "ok", brand:brand, matched:hitNg };
+    }
+    if (brand.method === "whitelist"){
+      var hitOk = matchList(raw, brand.list);
+      if (hitOk) return {status:"ok", brand:brand, matched:hitOk};
+      if (brand.knownUnsupported){
+        var hitKnownNg = matchList(raw, brand.knownUnsupported);
+        if (hitKnownNg) return {status:"ng", brand:brand, matched:hitKnownNg};
+      }
+      return {status:"ng", brand:brand};
+    }
+    if (brand.method === "whitelist_unknown"){
+      var hit = matchList(raw, brand.list);
+      if (hit) return {status:"ok", brand:brand, matched:hit};
+      return {status:"unknown_model", brand:brand};
+    }
+    return {status:"unknown_brand"};
+  }
+
+  // ---------- render result ----------
+  var resultEl = document.getElementById("result");
+  var badgeEl = document.getElementById("result-badge");
+  var titleEl = document.getElementById("result-title");
+  var bodyEl = document.getElementById("result-body");
+  var noteEl = document.getElementById("result-note");
+  var actionsEl = document.getElementById("result-actions");
+
+  var CS_URL = "https://tabisim.jp/support";
+  var GUIDE_URL = "https://tabisim.jp/ja/install";
+
+  function renderResult(r, query){
+    resultEl.classList.remove("ok","ng","unk");
+    actionsEl.innerHTML = "";
+    noteEl.hidden = true;
+
+    if (!r){
+      resultEl.classList.remove("show");
+      return;
+    }
+
+    if (r.status === "unknown_brand"){
+      resultEl.classList.add("show","unk");
+      badgeEl.textContent = "該当なし";
+      titleEl.textContent = "「" + query + "」";
+      bodyEl.textContent = "対応リストに一致する機種が見つかりませんでした。メーカー名を含めて再度お試しいただくか、サポートまでお問い合わせください。";
+      addCsButton();
+      return;
+    }
+    if (r.status === "excluded"){
+      resultEl.classList.add("show","unk");
+      badgeEl.textContent = "対象外";
+      titleEl.textContent = r.brand.brandLabel;
+      bodyEl.textContent = "Apple Watchは本チェッカーの対象外です。旅行用eSIM自体をインストールできないためです。";
+      return;
+    }
+    if (r.status === "ok"){
+      resultEl.classList.add("show","ok");
+      badgeEl.textContent = "対応";
+      titleEl.textContent = query;
+      bodyEl.textContent = "この機種はTabiSIMのeSIMに対応しています。インストール手順に進みましょう。";
+      addGuideButton();
+      return;
+    }
+    if (r.status === "ng"){
+      resultEl.classList.add("show","ng");
+      badgeEl.textContent = "非対応";
+      titleEl.textContent = query;
+      bodyEl.textContent = "この機種は現在TabiSIMのeSIMに対応していません。";
+      addCsButton();
+      return;
+    }
+    if (r.status === "unknown_model"){
+      resultEl.classList.add("show","unk");
+      badgeEl.textContent = "該当なし（不明機種）";
+      titleEl.textContent = query;
+      bodyEl.textContent = r.brand.brandLabel + "の対応リストに明確に一致しませんでした。旧世代シリーズや型番不明の機種の可能性があります。";
+      noteEl.hidden = false;
+      noteEl.textContent = "販売国・型番・キャリアにより対応状況が異なる場合があります。ご不明な場合はサポートへお問い合わせください。";
+      addCsButton();
+      return;
+    }
+  }
+
+  function addGuideButton(){
+    var a = document.createElement("a");
+    a.className = "btn btn-primary";
+    a.href = GUIDE_URL;
+    a.textContent = "インストール手順を見る";
+    actionsEl.appendChild(a);
+  }
+  function addCsButton(){
+    var a = document.createElement("a");
+    a.className = "btn btn-outline";
+    a.href = CS_URL;
+    a.textContent = "サポートに問い合わせる";
+    actionsEl.appendChild(a);
+  }
+
+  var input = document.getElementById("search-input");
+  var timer = null;
+  input.addEventListener("input", function(){
+    var v = input.value;
+    clearTimeout(timer);
+    timer = setTimeout(function(){
+      if (v.trim().length < 2){ renderResult(null); return; }
+      renderResult(check(v), v.trim());
+    }, 150);
   });
 
-  (function initLanguage(){
-    var saved = 'ja';
-    try{ saved = localStorage.getItem('tabisim-lang') || 'ja'; }catch(e){}
-    applyLanguage(saved);
-  })();
+  // ---------- render brand list panels ----------
+  function chip(text, ng){
+    var s = document.createElement("span");
+    s.className = "chip" + (ng ? " ng" : "");
+    s.textContent = text;
+    return s;
+  }
+  function fillChips(id, items, ng){
+    var el = document.getElementById(id);
+    if (!el) return;
+    items.forEach(function(t){ el.appendChild(chip(t, ng)); });
+  }
+
+  fillChips("iphone-ok", DB.iphone.supportedDisplay, false);
+  fillChips("iphone-ng", DB.iphone.unsupported, true);
+  document.getElementById("iphone-count").textContent = (DB.iphone.supportedDisplay.length) + "件";
+
+  fillChips("ipad-ok", DB.ipad.list, false);
+  document.getElementById("ipad-count").textContent = DB.ipad.list.length + "件";
+
+  // Android panel (built lazily on first tab switch)
+  var androidBuilt = false;
+  function buildAndroidPanel(){
+    if (androidBuilt) return;
+    androidBuilt = true;
+    var panel = document.getElementById("panel-android");
+    var order = [
+      {key:"galaxy", note:"上記系列に明確に一致しない機種（旧世代シリーズ・型番不明を含む）は「該当なし（不明機種）」として表示されます。"},
+      {key:"xperia", note:"上記系列に明確に一致しない機種は「該当なし（不明機種）」として表示されます。"},
+      {key:"aquos", note:"上記系列に明確に一致しない機種は「該当なし（不明機種）」として表示されます。"},
+      {key:"motorola", note:"上記系列に明確に一致しない機種は「該当なし（不明機種）」として表示されます。"},
+      {key:"xiaomi", note:"上記に明記された機種のみ対応。それ以外はすべて非対応です。"},
+      {key:"oppo", note:"上記に明記された機種のみ対応。末尾「Lite」モデルは原則非対応です。"},
+      {key:"vivo", note:"上記に明記された機種のみ対応。それ以外はすべて非対応です。"},
+      {key:"huawei", note:"P40 Pro+ / P50 Proは型番が似ていますが非対応です。ご注意ください。"}
+    ];
+    order.forEach(function(o){
+      var b = DB[o.key];
+      var d = document.createElement("details");
+      d.className = "brand-group";
+      var body = '<div class="sub"><h4>対応機種</h4><div class="chip-row">' +
+        b.list.map(function(t){return '<span class="chip">'+t+'</span>';}).join("") +
+        '</div></div><p class="group-footnote">'+o.note+'</p>';
+      d.innerHTML = '<summary>'+b.brandLabel+' <span class="count">'+b.list.length+'件</span>' +
+        '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>' +
+        '<div class="group-body">'+body+'</div>';
+      panel.appendChild(d);
+    });
+
+    var pixelDetails = document.createElement("details");
+    pixelDetails.className = "brand-group";
+    pixelDetails.innerHTML = '<summary>Google Pixel <span class="count">'+DB.pixel.supportedDisplay.length+'件</span>' +
+      '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>' +
+      '<div class="group-body"><div class="sub"><h4>対応</h4><div class="chip-row">' +
+      DB.pixel.supportedDisplay.map(function(t){return '<span class="chip">'+t+'</span>';}).join("") +
+      '</div></div><div class="sub"><h4>非対応</h4><div class="chip-row">' +
+      DB.pixel.unsupported.map(function(t){return '<span class="chip ng">'+t+'</span>';}).join("") +
+      '</div></div><p class="group-footnote">米国版Pixel 10/10 Pro/10 Pro XLはeSIM専用です。香港で販売されるPixel全モデルはeSIM非対応です。</p></div>';
+    panel.prepend(pixelDetails);
+  }
+
+  // ---------- tabs ----------
+  var tabs = document.querySelectorAll(".tab");
+  var panelApple = document.getElementById("panel-apple");
+  var panelAndroid = document.getElementById("panel-android");
+  tabs.forEach(function(t){
+    t.addEventListener("click", function(){
+      tabs.forEach(function(x){x.classList.remove("active");});
+      t.classList.add("active");
+      if (t.dataset.tab === "apple"){
+        panelApple.hidden = false; panelAndroid.hidden = true;
+      } else {
+        buildAndroidPanel();
+        panelApple.hidden = true; panelAndroid.hidden = false;
+      }
+    });
+  });
+})();
 </script>
+
+</body>
+</html>
